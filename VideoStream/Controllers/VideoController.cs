@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.IO;
 
@@ -9,19 +10,22 @@ namespace VideoStream.Controllers
     public class VideoController : ControllerBase
     {
         private readonly ILogger<VideoController> _logger;
+        private readonly IWebHostEnvironment webHostEnvironment;
 
         public VideoController(
-            ILogger<VideoController> logger)
+            ILogger<VideoController> logger,
+            IWebHostEnvironment webHostEnvironment)
         {
             _logger = logger;
+            this.webHostEnvironment = webHostEnvironment;
         }
 
         [HttpGet("stream/{*path}")]
-        public FileResult GetStreamFromPath(string path)
+        public FileStreamResult GetStreamFromPath(string path)
         {
             string filepath = Path.Combine("Content", path);
 
-            return new VirtualFileResult(filepath, "video/mp4");
+            return File(System.IO.File.OpenRead(filepath), "video/mp4", true);
         }
     }
 }

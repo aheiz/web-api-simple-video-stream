@@ -23,7 +23,7 @@ namespace VideoStream.Controllers
         [HttpGet("stream/{*path}")]
         public FileStreamResult GetStreamFromPath(string path)
         {
-            string filepath = Path.Combine("Content", path);
+            string filepath = Path.Combine(this.webHostEnvironment.WebRootPath, "Content", path);
 
             return File(System.IO.File.OpenRead(filepath), "video/mp4", true);
         }
